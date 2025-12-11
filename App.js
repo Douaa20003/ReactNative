@@ -1,58 +1,81 @@
 import React from 'react';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import HomeStack from './HomeStack';
-import SettingScreen from './SettingScreen';
-import HomeScreen from './HomeScreen';
-import DetailsScreen from './DetailsScreen';
-import AppBar from './AppBar';
+// Import écrans
+import AppBar from './screens/AppBar';
+import HomeScreen from './screens/HomeScreen';
+import DetailsScreen from './screens/DetailsScreen';
+import SettingsScreen from './screens/SettingsScreen';
 
-const Tab = createBottomTabNavigator(); // ← IMPORTANT
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
+// Navigation Stack (Accueil + Détails)
+function HomeStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Accueil"
+        component={HomeScreen}
+        options={{
+          headerStyle: { backgroundColor: '#007AFF' },
+          headerTintColor: '#fff',
+          headerTitleStyle: { fontWeight: 'bold' },
+        }}
+      />
 
+      <Stack.Screen
+        name="Details"
+        component={DetailsScreen}
+        options={{ title: 'Mes Détails Personnalisés' }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Navigation principale (onglets)
 export default function App() {
-    return (
-      <SafeAreaProvider>
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        
+        <AppBar />
+
         <NavigationContainer>
-          {/* SafeAreaView pour l'AppBar */}
-          <SafeAreaView style={{ backgroundColor: '#007AFF' }}>
-            <AppBar />
-          </SafeAreaView>
-  
-          {/* Contenu principal */}
-          <View style={{ flex: 1 }}>
-            <Tab.Navigator
-              screenOptions={{
-                headerShown: false, // désactive le header par défaut de React Navigation
-                tabBarActiveTintColor: 'blue',
-                tabBarInactiveTintColor: 'gray',
+          <Tab.Navigator
+            screenOptions={{
+              headerShown: false,
+              tabBarActiveTintColor: 'blue',
+              tabBarInactiveTintColor: 'gray',
+            }}
+          >
+            <Tab.Screen
+              name="Maison"
+              component={HomeStack}
+              options={{
+                tabBarIcon: ({ color, size }) => (
+                  <Ionicons name="home" size={size} color={color} />
+                ),
               }}
-            >
-              <Tab.Screen
-                name="Maison"
-                component={HomeStack}
-                options={{
-                  tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="home" size={size} color={color} />
-                  ),
-                }}
-              />
-  
-              <Tab.Screen
-                name="Paramètres"
-                component={SettingScreen}
-                options={{
-                  tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="settings" size={size} color={color} />
-                  ),
-                }}
-              />
-            </Tab.Navigator>
-          </View>
+            />
+
+            <Tab.Screen
+              name="Paramètres"
+              component={SettingsScreen}
+              options={{
+                tabBarIcon: ({ color, size }) => (
+                  <Ionicons name="settings" size={size} color={color} />
+                ),
+              }}
+            />
+          </Tab.Navigator>
         </NavigationContainer>
-      </SafeAreaProvider>
-    );
-  }
+
+      </SafeAreaView>
+    </SafeAreaProvider>
+  );
+}
