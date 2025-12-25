@@ -4,8 +4,12 @@ import { View, Text, StyleSheet } from 'react-native';
 export default function AppBar() {
   return (
     <View style={styles.appBar}>
-      <Text style={styles.title}>Mon Application</Text>
+      <Text style={styles.title}>Mes taches </Text>
+        <Button title="Deconnexion" onPress={() => Logout()} />
     </View>
+   
+
+     
   );
 }
 
